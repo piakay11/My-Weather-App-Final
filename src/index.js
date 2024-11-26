@@ -16,6 +16,8 @@ function refreshWeather(response) {
     windSpeedElement.innerHTML = `${response.data.wind.speed}km/h`;
     temperatureElement.innerHTML = Math.round(temperature);
     iconElement.innerHTML = `<img src="${response.data.condition.icon_url}" class="weather-app-icon" />`;
+  
+    getForecast(response.data.city);
   }
   
   function formatDate(date) {
@@ -32,7 +34,7 @@ function refreshWeather(response) {
     ];
     let day = days[date.getDay()];
   
-    if (minutes < 10) {
+    if (minutes < 10 ) {
       minutes = `0${minutes}`;
     }
   
@@ -41,7 +43,7 @@ function refreshWeather(response) {
 
   function searchCity(city) {
     let apiKey = "baft49f8dd4e4bdoffb2e2888505bb35";
-    let apiUrl = `https://api.shecodes.io/weather/v1/current?query=${city}&key=${apiKey}`;
+    let apiUrl = `https://api.shecodes.io/weather/v1/current?query=${city}&key=${apiKey}&units=metric`;
     axios.get(apiUrl).then(refreshWeather);
   }
   
@@ -52,7 +54,15 @@ function refreshWeather(response) {
     searchCity(searchInput.value);
   }
 
-  function displayForecast() {
+  function getForecast(city) {
+    let apiKey = "baft49f8dd4e4bdoffb2e2888505bb35";
+    let apiUrl = `https://api.shecodes.io/weather/v1/forecast?query=${city}&key=${apiKey}&units=metric`;
+    axios(apiUrl).then(displayForecast);
+  }
+
+  function displayForecast(response) {
+    console.log(response.data);
+
     let days = ["Tue", "Wed", "Thu", "Fri", "Sat"];
     let forecastHtml = "";
   
@@ -81,4 +91,3 @@ function refreshWeather(response) {
   searchFormElement.addEventListener("submit", handleSearchSubmit);
   
   searchCity("Paris");
-  displayForecast();
